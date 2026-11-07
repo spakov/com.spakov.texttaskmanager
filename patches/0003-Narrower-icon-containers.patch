@@ -1,0 +1,25 @@
+From 4aeaf202230b34c165617a4c662b27241659373e Mon Sep 17 00:00:00 2001
+From: spakov <3934369+spakov@users.noreply.github.com>
+Date: Fri, 6 Nov 2026 18:17:10 -0700
+Subject: [PATCH 3/3] Narrower icon containers
+
+---
+ applets/taskmanager/qml/Task.qml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/applets/taskmanager/qml/Task.qml b/applets/taskmanager/qml/Task.qml
+index 2291549..77fc681 100644
+--- a/applets/taskmanager/qml/Task.qml
++++ b/applets/taskmanager/qml/Task.qml
+@@ -548,7 +548,7 @@ PlasmaCore.ToolTipArea {
+             topMargin: adjustMargin(false, parent.height, taskFrame.margins.top)
+         }
+ 
+-        width: task.inPopup ? Math.max(Kirigami.Units.iconSizes.sizeForLabels, Kirigami.Units.iconSizes.medium) : Math.min(task.parent?.minimumWidth ?? 0, task.height)
++        width: task.inPopup ? Math.max(Kirigami.Units.iconSizes.sizeForLabels, Kirigami.Units.iconSizes.medium) : Math.min(task.parent?.minimumWidth ?? 0, task.height / 2)
+         height: task.inPopup ? width : (parent.height - adjustMargin(false, parent.height, taskFrame.margins.top)
+                  - adjustMargin(false, parent.height, taskFrame.margins.bottom))
+ 
+-- 
+2.56.0
+

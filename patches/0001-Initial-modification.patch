@@ -1,0 +1,388 @@
+From d29c36198f738c6fde0bed5f01bb303dff833f5a Mon Sep 17 00:00:00 2001
+From: spakov <3934369+spakov@users.noreply.github.com>
+Date: Fri, 6 Nov 2026 16:25:48 -0700
+Subject: [PATCH 1/3] Initial modification
+
+---
+ applets/taskmanager/CMakeLists.txt            |  13 +-
+ applets/taskmanager/Messages.sh               |   2 +-
+ applets/taskmanager/metadata.json             | 177 +-----------------
+ applets/taskmanager/qml/ContextMenu.qml       |   2 +-
+ applets/taskmanager/qml/GroupDialog.qml       |   2 +-
+ applets/taskmanager/qml/MouseHandler.qml      |   2 +-
+ applets/taskmanager/qml/Task.qml              |  20 +-
+ applets/taskmanager/qml/TaskList.qml          |   2 +-
+ .../taskmanager/qml/TaskProgressOverlay.qml   |   2 +-
+ applets/taskmanager/qml/main.qml              |   2 +-
+ 10 files changed, 36 insertions(+), 188 deletions(-)
+
+diff --git a/applets/taskmanager/CMakeLists.txt b/applets/taskmanager/CMakeLists.txt
+index 6848151..cd57cd7 100644
+--- a/applets/taskmanager/CMakeLists.txt
++++ b/applets/taskmanager/CMakeLists.txt
+@@ -1,7 +1,8 @@
+-add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kde.plasma.taskmanager\")
++add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_com.spakov.org.kde.plasma.taskmanager\")
+ 
+-plasma_add_applet(org.kde.plasma.taskmanager
++plasma_add_applet(com.spakov.org.kde.plasma.taskmanager
+     QML_SOURCES
++        Glyphs.js
+         qml/AudioStream.qml
+         qml/ConfigAppearance.qml
+         qml/ConfigBehavior.qml
+@@ -33,15 +34,15 @@ plasma_add_applet(org.kde.plasma.taskmanager
+     GENERATE_APPLET_CLASS
+ )
+ 
+-kconfig_add_kcfg_files(org.kde.plasma.taskmanager ${CMAKE_SOURCE_DIR}/kcms/recentFiles/kactivitymanagerd_plugins_settings.kcfgc)
++kconfig_add_kcfg_files(com.spakov.org.kde.plasma.taskmanager ${CMAKE_SOURCE_DIR}/kcms/recentFiles/kactivitymanagerd_plugins_settings.kcfgc)
+ 
+-ecm_qt_declare_logging_category(org.kde.plasma.taskmanager
++ecm_qt_declare_logging_category(com.spakov.org.kde.plasma.taskmanager
+     HEADER log_settings.h
+     IDENTIFIER TASKMANAGER_DEBUG
+-    CATEGORY_NAME org.kde.plasma.taskmanager)
++    CATEGORY_NAME com.spakov.org.kde.plasma.taskmanager)
+ 
+ # FIXME Cleanup no longer used libs.
+-target_link_libraries(org.kde.plasma.taskmanager PRIVATE
++target_link_libraries(com.spakov.org.kde.plasma.taskmanager PRIVATE
+                       Qt::Core
+                       Qt::Qml
+                       Qt::Quick
+diff --git a/applets/taskmanager/Messages.sh b/applets/taskmanager/Messages.sh
+index c86f8d7..6627fdc 100644
+--- a/applets/taskmanager/Messages.sh
++++ b/applets/taskmanager/Messages.sh
+@@ -1,2 +1,2 @@
+ #! /usr/bin/env bash
+-$XGETTEXT `find . -name \*.js -o -name \*.qml -o -name \*.cpp` -o $podir/plasma_applet_org.kde.plasma.taskmanager.pot
++$XGETTEXT $(find . -name \*.js -o -name \*.qml -o -name \*.cpp) -o $podir/plasma_applet_com.spakov.org.kde.plasma.taskmanager.pot
+diff --git a/applets/taskmanager/metadata.json b/applets/taskmanager/metadata.json
+index cbd6c40..1bde78f 100644
+--- a/applets/taskmanager/metadata.json
++++ b/applets/taskmanager/metadata.json
+@@ -2,180 +2,21 @@
+     "KPlugin": {
+         "Authors": [
+             {
+-                "Email": "hein@kde.org",
+-                "Name": "Eike Hein",
+-                "Name[ar]": "إيكي هين",
+-                "Name[az]": "Eike Hein",
+-                "Name[be]": "Eike Hein",
+-                "Name[bg]": "Eike Hein",
+-                "Name[ca@valencia]": "Eike Hein",
+-                "Name[ca]": "Eike Hein",
+-                "Name[cs]": "Eike Hein",
+-                "Name[da]": "Eike Hein",
+-                "Name[de]": "Eike Hein",
+-                "Name[el]": "Eike Hein",
+-                "Name[en_GB]": "Eike Hein",
+-                "Name[eo]": "Eike Hein",
+-                "Name[es]": "Eike Hein",
+-                "Name[et]": "Eike Hein",
+-                "Name[eu]": "Eike Hein",
+-                "Name[fi]": "Eike Hein",
+-                "Name[fr]": "Eike Hein",
+-                "Name[ga]": "Eike Hein",
+-                "Name[gl]": "Eike Hein",
+-                "Name[he]": "אייק היין",
+-                "Name[hu]": "Eike Hein",
+-                "Name[ia]": "Eike Hein",
+-                "Name[id]": "Eike Hein",
+-                "Name[ie]": "Eike Hein",
+-                "Name[is]": "Eike Hein",
+-                "Name[it]": "Eike Hein",
+-                "Name[ja]": "Eike Hein",
+-                "Name[ka]": "აიკე ჰაინი",
+-                "Name[ko]": "Eike Hein",
+-                "Name[lt]": "Eike Hein",
+-                "Name[lv]": "Eike Hein",
+-                "Name[nan_TW@latin]": "Eike Hein",
+-                "Name[nb]": "Eike Hein",
+-                "Name[nl]": "Eike Hein",
+-                "Name[nn]": "Eike Hein",
+-                "Name[pa]": "ਇਕੀ ਹੀਇਨ",
+-                "Name[pl]": "Eike Hein",
+-                "Name[pt]": "Eike Hein",
+-                "Name[pt_BR]": "Eike Hein",
+-                "Name[ro]": "Eike Hein",
+-                "Name[ru]": "Eike Hein",
+-                "Name[sa]": "ऐके हेन",
+-                "Name[sk]": "Eike Hein",
+-                "Name[sl]": "Eike Hein",
+-                "Name[sr@ijekavian]": "Ајке Хајн",
+-                "Name[sr@ijekavianlatin]": "Ajke Hajn",
+-                "Name[sr@latin]": "Ajke Hajn",
+-                "Name[sr]": "Ајке Хајн",
+-                "Name[sv]": "Eike Hein",
+-                "Name[ta]": "எய்கே ஹைன்",
+-                "Name[tr]": "Eike Hein",
+-                "Name[ug]": "Eike Hein",
+-                "Name[uk]": "Eike Hein",
+-                "Name[vi]": "Eike Hein",
+-                "Name[zh_CN]": "Eike Hein",
+-                "Name[zh_TW]": "Eike Hein"
++                "Email": "3934369+spakov@users.noreply.github.com",
++                "Name": "spakov"
+             }
+         ],
+-        "BugReportUrl": "https://bugs.kde.org/enter_bug.cgi?product=plasmashell&component=Task%20Manager%20and%20Icons-Only%20Task%20Manager%20widgets",
++        "BugReportUrl": "https://example.org/",
+         "Category": "Windows and Tasks",
+-        "Description": "Window bar displaying icons and text",
+-        "Description[ar]": "شريط نافذة يعرض أيقونات ونص",
+-        "Description[az]": "Nişanları və mətni göstərən pəncərə zolağı",
+-        "Description[be]": "На панэлі акна паказваюцца значкі і тэкст",
+-        "Description[bg]": "Лента на задачите, показваща икони и текст",
+-        "Description[ca@valencia]": "Barra de finestres que mostra les icones i text",
+-        "Description[ca]": "Barra de finestres que mostra les icones i text",
+-        "Description[cs]": "Okenní lišta zobrazující ikony a text",
+-        "Description[da]": "Vinduelinje, som viser ikoner og tekst",
+-        "Description[de]": "Fensterleiste mit Anzeige von Symbolen und Text",
+-        "Description[el]": "Γραμμή παραθύρου που εμφανίζει εικονίδια και κείμενο",
+-        "Description[en_GB]": "Window bar displaying icons and text",
+-        "Description[eo]": "Fenestrobreto montranta piktogramojn kaj tekston",
+-        "Description[es]": "Barra de ventanas que muestra iconos y texto",
+-        "Description[eu]": "Leiho-barra, ikonoak eta testua azaltzen dituela",
+-        "Description[fi]": "Kuvakkeet ja tekstin näyttävä ikkunapalkki",
+-        "Description[fr]": "Barre de fenêtres, avec des icônes et du texte",
+-        "Description[ga]": "Barra fuinneoige a thaispeánann deilbhíní agus téacs",
+-        "Description[gl]": "Barra de xanelas que amosa iconas e texto.",
+-        "Description[he]": "סרגל חלונות המציג סמלים וטקסט",
+-        "Description[hu]": "Ikonokat és szöveget megjelenítő ablaksáv",
+-        "Description[ia]": "Barra de finestra  monstrante  icones e texto",
+-        "Description[id]": "Bilah Jendela menampilkan ikon dan teks",
+-        "Description[is]": "Gluggastika sem birtir tákn og texta",
+-        "Description[it]": "La barra della finestra che visualizza icone e testo",
+-        "Description[ja]": "アイコンとテキストを表示するウィンドウバー",
+-        "Description[ka]": "ფანჯრების პანელი, ხატულებსა და ტექსტის ჩვენებით",
+-        "Description[ko]": "아이콘과 텍스트를 표시하는 창 표시줄",
+-        "Description[lt]": "Langų juosta atvaizduojanti piktogramas ir tekstą",
+-        "Description[lv]": "Loga josla ar ikonām un tekstu",
+-        "Description[nb]": "Vinduslinje med ikon og tekst",
+-        "Description[nl]": "Vensterbalk met pictogrammen en tekst",
+-        "Description[nn]": "Vindaugslinje med ikon og tekst",
+-        "Description[pa]": "ਆਈਕਾਨ ਅਤੇ ਲਿਖਤ ਦਿਖਾਉਣ ਵਾਲੀ ਵਿੰਡੋ ਪੱਟੀ",
+-        "Description[pl]": "Pasek okna wyświetlający ikony i tekst",
+-        "Description[pt]": "Barra de janelas com ícones e texto",
+-        "Description[pt_BR]": "Seletor de janelas estilo barra de tarefas mostrando ícones e texto",
+-        "Description[ro]": "Bară cu ferestre afișând pictograme și text",
+-        "Description[ru]": "Панель переключения окон, использующая значки и текст",
+-        "Description[sa]": "चिह्नानि पाठं च प्रदर्शयति इति विण्डोबार",
+-        "Description[sk]": "Prepínač okien zobrazujúci ikony a text",
+-        "Description[sl]": "Vrstica oken, ki prikazuje ikone in besedilo",
+-        "Description[sr@ijekavian]": "Трака прозора која приказује иконице и текст",
+-        "Description[sr@ijekavianlatin]": "Traka prozora koja prikazuje ikonice i tekst",
+-        "Description[sr@latin]": "Traka prozora koja prikazuje ikonice i tekst",
+-        "Description[sr]": "Трака прозора која приказује иконице и текст",
+-        "Description[sv]": "Fönsterrad som visar ikoner och text",
+-        "Description[ta]": "சின்னங்களையும் பெயர்களையும் காட்டும் பணிப்பட்டை",
+-        "Description[tr]": "Simge ve metin görüntüleyen pencere çubuğu",
+-        "Description[ug]": "كۆزنەك بالداقتا سىنبەلگە ۋە تېكىست كۆرسىتىدۇ",
+-        "Description[uk]": "Панель вікон із показаними піктограмами і текстом",
+-        "Description[zh_CN]": "窗口栏显示图标和文本",
+-        "Description[zh_TW]": "顯示圖示與文字的視窗列",
+-        "EnabledByDefault": true,
++        "Description": "Window bar displaying text only",
++        "EnabledByDefault": false,
+         "Icon": "preferences-system-windows",
+         "License": "GPL-2.0+",
+-        "Name": "Icons-and-Text Task Manager",
+-        "Name[ar]": "مدير مهامّ بأيقونات ونص",
+-        "Name[az]": "Tapşırıq menecerinin nişanı və mətni",
+-        "Name[be]": "Выгляд кіраўніка задач",
+-        "Name[bg]": "Мениджър на задачи (икони с текст)",
+-        "Name[ca@valencia]": "Gestor de tasques amb icones i text",
+-        "Name[ca]": "Gestor de tasques amb icones i text",
+-        "Name[cs]": "Správce úloh s ikonami a textem",
+-        "Name[da]": "Opgavelinje kun med ikoner og tekst",
+-        "Name[de]": "Fensterleiste mit Symbolen und Text",
+-        "Name[el]": "Διαχείριση εργασιών με εικονίδια και κείμενο",
+-        "Name[en_GB]": "Icons-and-Text Task Manager",
+-        "Name[eo]": "Piktogram-kaj-Teksta Taskadministrilo",
+-        "Name[es]": "Gestor de tareas con iconos y texto",
+-        "Name[eu]": "Ikonoak-eta-Testua dituen ataza-kudeatzailea",
+-        "Name[fi]": "Kuvakkeet ja teksti -tehtävienhallinta",
+-        "Name[fr]": "Gestionnaire de tâches avec icônes et du texte",
+-        "Name[ga]": "Bainisteoir Tascanna Deilbhíní agus Téacs",
+-        "Name[gl]": "Xestor de tarefas de só iconas e texto",
+-        "Name[he]": "מנהל משימות של סמלים וטקסט בלבד",
+-        "Name[hu]": "Ikonos és szöveges feladatkezelő",
+-        "Name[ia]": "Gerente de carga de icone-e-texto",
+-        "Name[id]": "Pengelola Tugas Ikon dan Teks",
+-        "Name[is]": "Verkefnastjóri með táknum og texta",
+-        "Name[it]": "Gestore dei processi solo icone e testo",
+-        "Name[ja]": "タスクマネージャ",
+-        "Name[ka]": "ხატულებიანი-და-ტექსტიანი ამოცანების მმართველი",
+-        "Name[ko]": "아이콘과 텍스트 작업 관리자",
+-        "Name[lt]": "Piktogramų ir teksto užduočių tvarkytuvė",
+-        "Name[lv]": "Ikonu un teksta uzdevumu pārvaldnieks",
+-        "Name[nan_TW@latin]": "Kang-khuè Kuán-lí-khì (Tôo-sī kap Bûn-jī)",
+-        "Name[nb]": "Oppgavebehandler med bare ikoner og tekst",
+-        "Name[nl]": "Takenbeheer met pictogrammen-en-tekst",
+-        "Name[nn]": "Oppgåve­handsamar med ikon og tekst",
+-        "Name[pa]": "ਆਈਕਾਨ-ਤੇ-ਲਿਖਤ ਟਾਸਕ ਮੈਨੇਜਰ",
+-        "Name[pl]": "Ikonowo-tekstowy przełącznik zadań",
+-        "Name[pt]": "Barra de tarefas (texto e ícones)",
+-        "Name[pt_BR]": "Gerenciador de tarefas com ícones e texto",
+-        "Name[ro]": "Gestionar de sarcini cu pictograme și text",
+-        "Name[ru]": "Панель задач (значки и текст)",
+-        "Name[sa]": "चिह्न-पाठ-कार्य-प्रबन्धकः",
+-        "Name[sk]": "Správca úloh s ikonami a textom",
+-        "Name[sl]": "Upravljalnik opravil z ikonami in besedili",
+-        "Name[sr@ijekavian]": "Менаџер задатака са иконицама и текстом",
+-        "Name[sr@ijekavianlatin]": "Menadžer zadataka sa ikonicama i tekstom",
+-        "Name[sr@latin]": "Menadžer zadataka sa ikonicama i tekstom",
+-        "Name[sr]": "Менаџер задатака са иконицама и текстом",
+-        "Name[sv]": "Aktivitetshanterare med ikoner och text",
+-        "Name[ta]": "சின்னங்கள்-மற்றும்-உரை பணி மேலாளி",
+-        "Name[tr]": "Simgeli ve Etiketli Görev Yöneticisi",
+-        "Name[ug]": "سىنبەلگە ۋە تېكىست ۋەزىپە باشقۇرغۇچ",
+-        "Name[uk]": "Керування задачами з піктограмами і текстом",
+-        "Name[zh_CN]": "图标和文本任务管理器",
+-        "Name[zh_TW]": "包含圖示與文字的工作管理員",
+-        "Website": "https://userbase.kde.org/Plasma/Tasks"
++        "Id": "com.spakov.org.kde.plasma.texttaskmanager",
++        "Name": "Text Task Manager",
++        "Website": "https://example.org/"
+     },
++    "KPackageStructure": "Plasma/Applet",
+     "X-Plasma-API-Minimum-Version": "6.0",
+     "X-Plasma-Provides": [
+         "org.kde.plasma.multitasking"
+diff --git a/applets/taskmanager/qml/ContextMenu.qml b/applets/taskmanager/qml/ContextMenu.qml
+index 60acd17..fc0f7ce 100644
+--- a/applets/taskmanager/qml/ContextMenu.qml
++++ b/applets/taskmanager/qml/ContextMenu.qml
+@@ -14,7 +14,7 @@ import org.kde.plasma.extras as PlasmaExtras
+ 
+ import org.kde.taskmanager as TaskManager
+ import org.kde.plasma.private.mpris as Mpris
+-import plasma.applet.org.kde.plasma.taskmanager as TaskManagerApplet
++import plasma.applet.com.spakov.org.kde.plasma.taskmanager as TaskManagerApplet
+ 
+ PlasmaExtras.Menu {
+     id: menu
+diff --git a/applets/taskmanager/qml/GroupDialog.qml b/applets/taskmanager/qml/GroupDialog.qml
+index 71814df..4a23678 100644
+--- a/applets/taskmanager/qml/GroupDialog.qml
++++ b/applets/taskmanager/qml/GroupDialog.qml
+@@ -13,7 +13,7 @@ import org.kde.plasma.core as PlasmaCore
+ import org.kde.plasma.components as PlasmaComponents3
+ import org.kde.kirigami as Kirigami
+ import org.kde.plasma.plasmoid
+-import plasma.applet.org.kde.plasma.taskmanager as TaskManagerApplet
++import plasma.applet.com.spakov.org.kde.plasma.taskmanager as TaskManagerApplet
+ 
+ PlasmaCore.PopupPlasmaWindow {
+     id: groupDialog
+diff --git a/applets/taskmanager/qml/MouseHandler.qml b/applets/taskmanager/qml/MouseHandler.qml
+index 8f47537..26a85ab 100644
+--- a/applets/taskmanager/qml/MouseHandler.qml
++++ b/applets/taskmanager/qml/MouseHandler.qml
+@@ -8,7 +8,7 @@ import QtQuick
+ 
+ import org.kde.taskmanager as TaskManager
+ import org.kde.plasma.plasmoid
+-import plasma.applet.org.kde.plasma.taskmanager as TaskManagerApplet
++import plasma.applet.com.spakov.org.kde.plasma.taskmanager as TaskManagerApplet
+ 
+ DropArea {
+     id: dropArea
+diff --git a/applets/taskmanager/qml/Task.qml b/applets/taskmanager/qml/Task.qml
+index 6506fca..dcedbb4 100644
+--- a/applets/taskmanager/qml/Task.qml
++++ b/applets/taskmanager/qml/Task.qml
+@@ -1,6 +1,7 @@
+ /*
+     SPDX-FileCopyrightText: 2012-2013 Eike Hein <hein@kde.org>
+     SPDX-FileCopyrightText: 2024 Nate Graham <nate@kde.org>
++    SPDX-FileCopyrightText: 2026 spakov <3934369+spakov@users.noreply.github.com>
+ 
+     SPDX-License-Identifier: GPL-2.0-or-later
+ */
+@@ -15,11 +16,13 @@ import org.kde.ksvg as KSvg
+ import org.kde.plasma.extras as PlasmaExtras
+ import org.kde.plasma.components as PlasmaComponents3
+ import org.kde.kirigami as Kirigami
+-import plasma.applet.org.kde.plasma.taskmanager as TaskManagerApplet
++import plasma.applet.com.spakov.org.kde.plasma.taskmanager as TaskManagerApplet
+ import org.kde.plasma.plasmoid
+ 
+ import org.kde.taskmanager as TaskManager
+ 
++import "Glyphs.js" as Glyphs
++
+ PlasmaCore.ToolTipArea {
+     id: task
+ 
+@@ -568,15 +571,18 @@ PlasmaCore.ToolTipArea {
+             return margin;
+         }
+ 
+-        Kirigami.Icon {
+-            id: icon
++        PlasmaComponents3.Label {
++          id: icon
++
++          readonly property var g: Glyphs.lookup(model.AppId, model.AppName, model.display)
+ 
+-            anchors.fill: parent
++          text: g.glyph
++          color: g.color
+ 
+-            active: task.highlighted
+-            enabled: true
++          font.pixelSize: height * 0.8
+ 
+-            source: task.model.decoration
++          horizontalAlignment: Text.AlignHCenter
++          verticalAlignment: Text.AlignVCenter
+         }
+ 
+         states: [
+diff --git a/applets/taskmanager/qml/TaskList.qml b/applets/taskmanager/qml/TaskList.qml
+index 9c21303..71d8e03 100644
+--- a/applets/taskmanager/qml/TaskList.qml
++++ b/applets/taskmanager/qml/TaskList.qml
+@@ -9,7 +9,7 @@ import QtQuick.Layouts
+ 
+ import org.kde.plasma.plasmoid
+ import org.kde.plasma.core as PlasmaCore
+-import plasma.applet.org.kde.plasma.taskmanager as TaskManagerApplet
++import plasma.applet.com.spakov.org.kde.plasma.taskmanager as TaskManagerApplet
+ 
+ GridLayout {
+     property bool animating: false
+diff --git a/applets/taskmanager/qml/TaskProgressOverlay.qml b/applets/taskmanager/qml/TaskProgressOverlay.qml
+index 5068290..77bf1da 100644
+--- a/applets/taskmanager/qml/TaskProgressOverlay.qml
++++ b/applets/taskmanager/qml/TaskProgressOverlay.qml
+@@ -10,7 +10,7 @@ import QtQuick.Templates as T
+ import org.kde.ksvg as KSvg
+ import org.kde.plasma.plasmoid
+ 
+-import plasma.applet.org.kde.plasma.taskmanager as TaskManagerApplet
++import plasma.applet.com.spakov.org.kde.plasma.taskmanager as TaskManagerApplet
+ 
+ T.ProgressBar {
+     id: control
+diff --git a/applets/taskmanager/qml/main.qml b/applets/taskmanager/qml/main.qml
+index 969460c..5c01176 100644
+--- a/applets/taskmanager/qml/main.qml
++++ b/applets/taskmanager/qml/main.qml
+@@ -18,7 +18,7 @@ import org.kde.kirigami as Kirigami
+ import org.kde.plasma.workspace.trianglemousefilter
+ 
+ import org.kde.taskmanager as TaskManager
+-import plasma.applet.org.kde.plasma.taskmanager as TaskManagerApplet
++import plasma.applet.com.spakov.org.kde.plasma.taskmanager as TaskManagerApplet
+ import org.kde.plasma.workspace.dbus as DBus
+ 
+ PlasmoidItem {
+-- 
+2.56.0
+
