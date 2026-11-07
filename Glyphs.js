@@ -51,6 +51,7 @@ const Mocha = {
 //    when one app (e.g. a browser) hosts many different things. /.../i means
 //    "case-insensitive".
 const titleRules = [
+  { match: /settings$/i, glyph: "", color: Mocha.overlay2 },
   //{ match: /youtube/i, glyph: "\uf16a", color: Mocha.red }, // youtube
   //{ match: /github/i, glyph: "\uf09b", color: Mocha.text }, // github
   //{ match: /\.(md|txt)\b/i, glyph: "\uf15c", color: Mocha.lavender } // text file
@@ -59,9 +60,12 @@ const titleRules = [
 // 2. App ID rules: exact desktop-file ID (what model.AppId reports).
 const appIdRules = {
   "Claude-com.anthropic.Claude": { glyph: "", color: Mocha.peach },
+  "com.discordapp.Discord": { glyph: "", color: Mocha.mauve },
+  "com.onepassword.OnePassword": { glyph: "", color: Mocha.blue },
   "io.github.DenysMb.Kontainer": { glyph: "", color: Mocha.green },
   "io.gitlab.librewolf-community": { glyph: "󰖟", color: Mocha.sapphire },
   "md.obsidian.Obsidian": { glyph: "", color: Mocha.mauve },
+  "net.lutris.Lutris": { glyph: "󰺶", color: Mocha.peach },
   "org.kde.dolphin": { glyph: "", color: Mocha.maroon },
   "org.kde.konsole": { glyph: "", color: Mocha.pink },
   "org.mozilla.thunderbird": { glyph: "", color: Mocha.sky },
