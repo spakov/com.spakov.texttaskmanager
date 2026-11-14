@@ -60,11 +60,12 @@ const titleRules = [
 // 2. App ID rules: exact desktop-file ID (what model.AppId reports).
 const appIdRules = {
   "Claude-com.anthropic.Claude": { glyph: "", color: Mocha.peach },
+  "Projects": { glyph: "", color: Mocha.mauve },
   "com.discordapp.Discord": { glyph: "", color: Mocha.mauve },
-  "com.onepassword.OnePassword": { glyph: "", color: Mocha.blue },
   "io.github.DenysMb.Kontainer": { glyph: "", color: Mocha.green },
   "io.gitlab.librewolf-community": { glyph: "󰖟", color: Mocha.sapphire },
-  "md.obsidian.Obsidian": { glyph: "", color: Mocha.mauve },
+  "md.obsidian.Obsidian": { glyph: "󰺿", color: Mocha.mauve },
+  "me.proton.Pass": { glyph: "", color: Mocha.blue },
   "net.lutris.Lutris": { glyph: "󰺶", color: Mocha.peach },
   "org.kde.dolphin": { glyph: "", color: Mocha.maroon },
   "org.kde.konsole": { glyph: "", color: Mocha.pink },
